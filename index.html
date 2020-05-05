@@ -6,14 +6,26 @@
     <title>Truth Table</title>
 
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/e0c9df4dfd.js" crossorigin="anonymous" SameSite="None"></script>
 </head>
 <body>
     <main>
         <div class="container">
             <h1>Truth Table Generator</h1>
             <input type="text" name="condition" id="condition" placeholder="Write your condition here...">
-            <a id="button">Generate</a>
+            <button id="button">Generate</button>
         </div>
     </main>
+
+    <!-- The Modal -->
+    <div id="message" class="modal">
+        <div class="modal-content">
+                <span class="close">&times;</span>
+                <i class="fas fa-exclamation-triangle"></i>
+                <p id="modal-text">Some text in the Modal..</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,10 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;700&display=swap');
 
+:root {
+    --bg-color: #031926;
+    --h1-color: #368F8B;
+    --base-color: #D6A2AD;
+    --base-color-hover: #5AB1BB;
+    --error: #C03221;
+}
+
 html, body, main {
     height: 100%;
     margin: 0px;
     font-family: 'Jost', sans-serif;
-    background-color: #031926;
+    background-color: var(--bg-color);
 }
 
 main {
@@ -15,14 +23,14 @@ main {
 
 h1 {
     margin: 0px;
-    color: #368F8B;
+    color: var(--h1-color);
 }
 
 .container {
     flex: 1;
     text-align: center;
     padding: 10px;
-    color: #D6A2AD;
+    color: var(--base-color);
 }
 
 input[type=text], #button {
@@ -30,8 +38,8 @@ input[type=text], #button {
     margin: 20px;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
-    border: 1px solid #D6A2AD;
-    color: #D6A2AD;
+    border: 1px solid var(--base-color);
+    color: var(--base-color);
 
     transition-property: color, border, border-radius;
     transition-duration: .3s;
@@ -39,15 +47,14 @@ input[type=text], #button {
 
 input {
     font-family: 'Jost', sans-serif;
-    -webkit-appearance: none;
     outline: none;
     height: 25px;
     width: 80%;
 }
 
 input:focus {
-    color: #5AB1BB;
-    border-color: #5AB1BB;
+    color: var(--base-color-hover);
+    border-color: var(--base-color-hover);
     border-radius: 10px;
 }
 
@@ -56,9 +63,51 @@ input:focus {
     cursor: pointer;
 }
 
-#button:hover {
-    color: #5AB1BB;
-    border-color: #246A73;
+#button:hover, #button:focus {
+    outline: none;
+    color: var(--base-color-hover);
+    border-color: var(--base-color-hover);
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.3);
+}
+
+/** MODAL **/
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+  
+/* Modal Content/Box */
+.modal-content {
+    color: var(--error);
+    text-align: center;
+    background-color: var(--bg-color);
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid var(--base-color);
+    width: fit-content; /* Could be more or less, depending on screen size */
+}
+  
+/* The Close Button */
+.close {
+    color: var(--base-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+  
+.close:hover,
+.close:focus {
+    color: var(--base-color-hover);
+    text-decoration: none;
+    cursor: pointer;
 }
