@@ -1,44 +1,122 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 :root {
     --bg-color: #031926;
-    --h1-color: #368F8B;
-    --base-color: #D6A2AD;
-    --base-color-hover: #5AB1BB;
+    --h1-color: #368f8b;
+    --base-color: #d6a2ad;
+    --base-color-hover: #368f8b; /*Old color #5AB1BB*/
     --error: #C03221;
 }
 
 html, body, main {
     height: 100%;
     margin: 0px;
-    font-family: 'Jost', sans-serif;
+    font-family: 'Orbitron', 'Permanent Marker', 'Jost', sans-serif;
     background-color: var(--bg-color);
 }
 
 main {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-h1 {
-    margin: 0px;
-    color: var(--h1-color);
+section {
+    margin-top: 20px;
 }
 
+h1 {
+    margin: 0px;
+    font-weight: 200;
+    color: var(--h1-color);
+    text-shadow: 0 2px 0px var(--base-color), 0 0px 2px var(--base-color), 0 2px 2px var(--base-color);
+
+    transition-property: color, text-shadow;
+    transition-duration: .3s;
+}
+
+h1:hover {
+    color: var(--base-color);
+    text-shadow: 0 2px 0px var(--h1-color), 0 0px 2px var(--h1-color), 0 2px 2px var(--h1-color);
+}
+
+@media(min-width: 0) {
+    h1 {
+        font-size: 30px;
+    }
+}
+
+@media(min-width: 516px) {
+    h1 {
+        font-size: 40px;
+    }
+}
+
+@media(min-width: 800px) {
+    h1 {
+        font-size: 50px;
+    }
+}
+
+@media(min-width: 1024px) {
+    h1 {
+        font-size: 60px;
+    }
+}
+
+/**************************/
+/****** MAIN SECTION ******/
+/**************************/
+
 .container {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     padding: 10px;
     color: var(--base-color);
+    height: 100%;
 }
 
-input[type=text], #button {
+.container p {
+    border-top: 1px solid var(--base-color);
+    color: var(--h1-color);
+    margin: 0;
+    margin-top: 40px;
+    font-weight: 700;
+}
+
+.container p span {
+    border-bottom: 1px solid var(--base-color);
+}
+
+.container a {
+    text-decoration: none;
+    border-top: 1px solid;
+    border-top-color: var(--base-color);
+    border-bottom: 1px solid var(--base-color);
+    color: var(--base-color-hover);
+
+    transition-property: border-top-color, border-bottom, color;
+    transition-duration: .3s;
+}
+
+.container a:hover {
+    border-top-color: var(--base-color-hover);
+    border-bottom: 1px solid var(--base-color-hover);
+    color: var(--base-color);
+}
+
+input[type=text],
+.button {
     padding: 10px;
-    margin: 20px;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
-    border: 1px solid var(--base-color);
+    margin-top: 20px;
+    border: 4px double var(--base-color);
     color: var(--base-color);
 
     transition-property: color, border, border-radius;
@@ -49,21 +127,24 @@ input {
     font-family: 'Jost', sans-serif;
     outline: none;
     height: 25px;
-    width: 80%;
+    width: 85%;
 }
 
+input:hover,
 input:focus {
     color: var(--base-color-hover);
     border-color: var(--base-color-hover);
     border-radius: 10px;
 }
 
-#button {
+.button {
+    font-family: 'Orbitron', 'Permanent Marker', 'Jost', sans-serif;
     width: fit-content;
     cursor: pointer;
 }
 
-#button:hover, #button:focus {
+.button:hover,
+.button:focus {
     outline: none;
     color: var(--base-color-hover);
     border-color: var(--base-color-hover);
@@ -71,7 +152,54 @@ input:focus {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-/** MODAL **/
+/*******************/
+/****** TABLE ******/
+/*******************/
+table,
+td {
+    margin: 10px;
+    color: var(--h1-color);
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: double;
+    border-color: var(--base-color);
+}
+
+thead td {
+    font-weight: 700;
+}
+
+table>thead td:last-child {
+    padding: 10px 20px;
+}
+
+tbody td {
+    font-weight: 300;
+}
+
+td {
+    text-align: center;
+    padding: 10px;
+
+    transition-property: color, border-color, border-radius;
+    transition-duration: .3s;
+}
+
+.table>table:hover {
+    transition-property: border-color, border-radius;
+    transition-duration: .3s;
+}
+
+td:hover, .table>table:hover {
+    border-radius: 10px;
+    color: var(--base-color);
+    border-color: var(--base-color-hover);
+}
+
+/*******************/
+/****** MODAL ******/
+/*******************/
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -84,25 +212,34 @@ input:focus {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
+    transition-property: all;
+    transition-duration: .3s;
 }
   
-/* Modal Content/Box */
+/* Modal Content */
 .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: var(--error);
     text-align: center;
+    font-size: 16px;
+    font-weight: 400;
     background-color: var(--bg-color);
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 34vh auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid var(--base-color);
     width: fit-content; /* Could be more or less, depending on screen size */
 }
-  
+
 /* The Close Button */
 .close {
     color: var(--base-color);
     float: right;
-    font-size: 28px;
-    font-weight: bold;
+    margin-top: 0;
+    font-weight: 200;
+    position: relative;
 }
   
 .close:hover,

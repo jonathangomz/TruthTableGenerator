@@ -10,19 +10,39 @@
 </head>
 <body>
     <main>
-        <div class="container">
+        <section class="container">
+            <p><a href="https://jonathangomz.github.io/">@jonathangomz</a> <span>present</span></p>
             <h1>Truth Table Generator</h1>
-            <input type="text" name="condition" id="condition" placeholder="Write your condition here...">
-            <button id="button">Generate</button>
-        </div>
+            <input type="text" name="condition" id="condition" placeholder="ie. (A + B)">
+            <button class="button" id="generate">Generate</button>
+        </section>
+        <section class="table">
+            <table>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td id="results"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </section>
     </main>
 
     <!-- The Modal -->
-    <div id="message" class="modal">
+    <div id="modal" class="modal">
         <div class="modal-content">
-                <span class="close">&times;</span>
-                <i class="fas fa-exclamation-triangle"></i>
-                <p id="modal-text">Some text in the Modal..</p>
+            <i class="fas fa-exclamation-triangle"></i>
+            <p id="modal-text">This modal is empty hehe</p>
+            <button class="button close">Aceptar</button>
         </div>
     </div>
 
