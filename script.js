@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', DOMFunctionality);
 
-function DOMFunctionality(e){
+function DOMFunctionality(){
     let modal = configureModal({
-        span: document.getElementsByClassName("button close")[0],
+        close: document.getElementsByClassName("button close")[0],
         modal: document.getElementById('modal')
     });
 
@@ -17,28 +17,21 @@ function DOMFunctionality(e){
         const input = document.getElementById('condition');
         
         const validation = validator(input.value);
-        if(validation.error){
-            switch(validation.type) {
-                case ERROR.LENGTH:
-                    modal.display(validation.message);
-                    break;
-                default:
-                    console.log("Default");
-                    break;
-            }
+        if(validation.haveError){
+            modal.display(validation.message);
         }
     }
 }
 
 /**
  * Add the events for open & close modal, and the implement function to display with custom message.
- * @param  {HTMLElement} span The element to close the modal
+ * @param  {HTMLElement} close The element to close the modal
  * @param  {HTMLElement} modal The modal itself
  * @returns {HTMLElement} The modal with a custom function for display with message.
  */
-function configureModal({span, modal}) {
+function configureModal({close, modal}) {
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+    close.onclick = function() {
         modal.style.display = "none";
     }
 
@@ -74,7 +67,7 @@ function configureTable({tableContainer, data = exampleData}) {
     data.options.forEach((option, indexRes) => {
         let resultForCombination = data.results[indexRes];
 
-        component.openRow();
+        component.initRow();
         for(let key in option){
             component.addRowCell(option[key]);
         }
@@ -88,14 +81,51 @@ function configureTable({tableContainer, data = exampleData}) {
 
 /**
  * Validate if the value for condition field is correct
- * @param  {string} strCondition The condition itself
- * @return {object}      An object with an error, type and message. Type and message useful only when error is presented.
+ * @param  {string} input The input text
+ * @return {object}      An object with haveError, error and message properties. Error and message are useful only when haveError is true.
  */
-function validator(strCondition){
-    if(strCondition.length <= 0)
-        return { error: true, type: ERROR.LENGTH, message: "You must write a condition" };
+function validator(input){
+    if(input.length <= 0)
+        return { haveError: true, error: ERROR.LENGTH, message: "You must write a condition" };
+
+    let parentheses = parenthesesValidator(input);
+
+    if(parentheses.haveError){
+        return { haveError: true, error: parentheses.error, message: parentheses.message };
+    }
     
-    return { error: false, type: ERROR.NONE, message: ""};
+    return { haveError: false, error: ERROR.NONE, message: "Ok" };
+}
+
+/**
+ * Validate the correct use of the parentheses
+ * @param {string} input An string with a sequence of parentheses
+ * @returns {object}     An object with haveError, error and message properties. Error and message are useful only when haveError is true.
+ */
+function parenthesesValidator(input) {
+    const PARENTHESIS_OPEN = ['(', '{', '['];
+    const PARENTHESIS_CLOSE = [')', '}', ']'];
+
+    const stackForParentheses = [];
+    for(let char of input){
+        if(PARENTHESIS_OPEN.includes(char))
+            stackForParentheses.push(char);
+        
+        else if(PARENTHESIS_CLOSE.includes(char)) {
+            if(stackForParentheses.length === 0)
+                return {haveError: true, error: ERROR.PARENTHESES_CLOSE, message: 'Bad close parentheses. Open parenthesis is missing.'};
+
+            let last = stackForParentheses.pop();
+            if(PARENTHESIS_OPEN.indexOf(last) !== PARENTHESIS_CLOSE.indexOf(char))
+                return {haveError: true, error: ERROR.PARENTHESES_TYPE_MIX, message: 'Mixed parentheses'};
+        }
+        
+    }
+
+    if(stackForParentheses.length !== 0)
+        return {haveError: true, error: ERROR.PARENTHESES_OPEN, message: 'Bad open parentheses. Close parenthesis is missing.'};
+
+    return { haveError: false, error: ERROR.NONE, message: 'Ok'};
 }
 
 /**
@@ -107,6 +137,7 @@ const ERROR = {
     CHARACTER: 4001,
     PARENTHESES_OPEN: 4002,
     PARENTHESES_CLOSE: 4003,
+    PARENTHESES_TYPE_MIX: 4004,
 }
 
 /**
@@ -134,13 +165,13 @@ class TableComponent {
      * @param {HTMLElement} htmlElementContainer The element in the DOM where the table will be inserted.
      */
     constructor(htmlElementContainer){
-        /** @private */
+        /** @public */
         this.container = htmlElementContainer;
-        /** @private */
+        /** @public */
         this.row = [];
-        /** @private */
+        /** @public */
         this.thead = [];
-        /** @private */
+        /** @public */
         this.tbody = [];
 
         /** @public */
@@ -153,7 +184,7 @@ class TableComponent {
     /**
      * Clean the row. Remove the cells added previously
      */
-    openRow = () => {
+    initRow = () => {
         this.row = [];
     }
 
