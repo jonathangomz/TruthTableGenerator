@@ -6,22 +6,102 @@ function DOMFunctionality(){
         modal: document.getElementById('modal')
     });
 
-    let tableComponent = configureTable({
-        tableContainer: document.getElementById("results")
-    });
+    let tableComponent = new TableComponent(document.getElementById("results"))
 
-    tableComponent.updateDOM();
+    // Load example initial table
+    tableComponent.loadData(exampleData)
 
     let btn = document.getElementById('generate');
     btn.onclick = function(){
+        // Clean the table
+        tableComponent.reset();
+
         const input = document.getElementById('condition');
         
         const validation = validator(input.value);
         if(validation.haveError){
             modal.display(validation.message);
+        } else {
+            const options = getOptions(input.value);
+            const result = solve(input.value, options);
+
+            // Update table
+            tableComponent.loadData(result);
         }
     }
 }
+
+/**
+ * 
+ * Get the options to use for true and false
+ * @param  {string} condition The rule to map
+ * @returns {Object} An Object with each of the valid options for the condition
+ */
+function getOptions(condition) {
+	const regex = new RegExp('([a-zA-Z])*', 'g');
+	const result = condition.match(regex).filter(options => options !== '');
+	const variablesWithoutDuplicateds = [...new Set(result)]; // a, b, c
+
+    // get the number of combinations for the condition using binary. Ex. if a, b & c the max options are '100' in binary * 2 (100 = 4, 4*2 = 8)
+	let rounds = parseInt('1' + new Array(variablesWithoutDuplicateds.length).join('0'), 2) * 2
+
+	const mappedOptions = {}
+	for(let i = 0; i < rounds; i++) {
+        mappedOptions[i] = {}
+        const binary = i.toString(2).split('')
+
+        while(binary.length < variablesWithoutDuplicateds.length) {
+            binary.unshift('0')
+        }
+
+        for(let option in variablesWithoutDuplicateds) {
+            mappedOptions[i][variablesWithoutDuplicateds[option]] = Boolean(parseInt(binary[option]))
+        }
+	}
+
+	return mappedOptions
+}
+
+/**
+ * 
+ * Solve each of the possible variants of the operation
+ * @param  {string} condition The condition to solve
+ * @returns {Object} A list of objecs with the options and result
+ */
+function solve(condition) {
+    const mappedConditionsResults = {}
+    const mappedOptions = []
+    const results = []
+
+    const options = getOptions(condition)
+    for(let option in options) {
+        let singleMappedOperation = condition;
+        for(let variable of Object.keys(options[option])) {
+            let value = options[option][variable]
+            singleMappedOperation = singleMappedOperation.replace(variable, value.toString())
+        }
+
+        const result = Boolean(eval(singleMappedOperation))
+
+        mappedConditionsResults[option] = {
+            operation: singleMappedOperation,
+            options: options[option],
+            result: result
+        }
+
+        mappedOptions.push(options[option])
+        results.push(result)
+    }
+
+    return {
+        condition,
+        variables: Object.keys(options[0]),
+        options: mappedOptions,
+        results,
+        mappedResults: {...mappedConditionsResults}
+    }
+}
+
 
 /**
  * Add the events for open & close modal, and the implement function to display with custom message.
@@ -227,5 +307,42 @@ class TableComponent {
      */             
     updateDOM = () => {
         this.container.innerHTML = this.getHTML();
+    }
+
+
+    /**
+     * Add date and update table
+     * @param {any} data The data that will be inserted on the table
+     * @returns {string} The TableComponent itself
+     */
+    loadData = (data = exampleData) => {        
+        for(let variable of data.variables) {
+            this.addTitleCell(variable);
+        }
+        this.addTitleCell(data.condition);
+    
+        data.options.forEach((option, indexRes) => {
+            let resultForCombination = data.results[indexRes];
+    
+            this.initRow();
+            for(let key in option){
+                this.addRowCell(option[key]);
+            }
+            this.addRowCell(resultForCombination);
+            this.closeRow();
+        });
+
+        this.updateDOM()
+    
+        return this;
+    }
+
+    /**
+     * Reset the table
+     */
+    reset = () => {
+        this.row = []
+        this.thead = []
+        this.tbody = []
     }
 }
