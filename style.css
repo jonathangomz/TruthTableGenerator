@@ -11,7 +11,6 @@
 }
 
 html, body, main {
-    height: 100%;
     margin: 0px;
     font-family: 'Orbitron', 'Permanent Marker', 'Jost', sans-serif;
     background-color: var(--bg-color);
@@ -78,7 +77,6 @@ h1:hover {
     text-align: center;
     padding: 10px;
     color: var(--base-color);
-    height: 100%;
 }
 
 .container p {
